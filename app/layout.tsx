@@ -1,6 +1,7 @@
 import "@/app/ui/global.css";
 import { inter } from "@/app/ui/fonts";
 import Image from "next/image";
+import Link from "next/link";
 import BackgroundParallax from "@/app/ui/BackgroundParallax";
 
 export default function RootLayout({
@@ -25,21 +26,25 @@ export default function RootLayout({
               </h1>
               <nav className="mt-4">
                 <div className="flex justify-center gap-6 text-lg text-gray-700">
-                  <a href="#" className="hover:underline">
+                  <Link href="/" className="hover:underline">
                     Home
-                  </a>
+                  </Link>
                   <b className="text-gray-400">|</b>
-                  <a href="#" className="hover:underline">
+                  <Link href="/" className="hover:underline">
+                    Info
+                  </Link>
+                  <b className="text-gray-400">|</b>
+                  <Link href="/about" className="hover:underline">
+                    Story
+                  </Link>
+                  <b className="text-gray-400">|</b>
+                  <Link href="/gallery" className="hover:underline">
                     Gallery
-                  </a>
+                  </Link>
                   <b className="text-gray-400">|</b>
-                  <a href="#" className="hover:underline">
-                    About Us
-                  </a>
-                  <b className="text-gray-400">|</b>
-                  <a href="#" className="hover:underline">
+                  <Link href="/about" className="hover:underline">
                     RSVP
-                  </a>
+                  </Link>
                 </div>
               </nav>
             </div>

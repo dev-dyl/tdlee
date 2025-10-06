@@ -1,58 +1,65 @@
+// app/api/rsvp/submit/route.ts
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-type SubmitBody = {
-  partyId?: string;
-  guests?: { guestId: string; attending: boolean; dietary?: string }[];
+type GuestInput = {
+  guestId: string;
+  attending: boolean;
+  tentative?: boolean;
+  glutenFree?: boolean;
   needTransport?: boolean;
-  message?: string;
+  dietaryNotes?: string;
+};
+
+type Body = {
+  rsvpBy?: string;                // acting guest id (required)
+  guests?: GuestInput[];          // guests to submit for (>=1)
 };
 
 export async function POST(req: Request) {
   try {
-    const body = (await req.json()) as SubmitBody;
-    const { partyId, guests = [], needTransport = false, message = "" } = body;
-
-    if (!partyId || guests.length === 0) {
+    const { rsvpBy, guests = [] } = (await req.json()) as Body;
+    if (!rsvpBy || guests.length === 0) {
       return NextResponse.json({ ok: false, error: "Invalid payload" }, { status: 400 });
     }
 
-    // Ensure the party exists & that guests belong to it (basic safety)
-    const valid = await sql<{ count: number }[]>`
-      select count(*)::int as count
-      from guests
-      where party_id = ${partyId}
-        and id = any(${guests.map((g) => g.guestId)})
+    // Verify all guest ids exist
+    const ids = guests.map(g => g.guestId);
+    const exists = await sql`
+      select count(*)::int as count from guests where id = any(${ids})
     `;
-    if (!valid[0] || valid[0].count !== guests.length) {
-      return NextResponse.json({ ok: false, error: "Guests/party mismatch" }, { status: 400 });
+    if (exists[0]?.count !== ids.length) {
+      return NextResponse.json({ ok: false, error: "Unknown guest id(s)" }, { status: 400 });
     }
 
-    // Upsert per-guest responses
+    // Build allowed set = self + children from can_rsvp_for
+    const allowed = await sql`
+      select ${rsvpBy}::uuid as id
+      union
+      select child as id from can_rsvp_for where parent = ${rsvpBy}
+    `;
+    const allowedSet = new Set(allowed.map(r => r.id));
+
+    const unauthorized = guests.filter((g) => !allowedSet.has(g.guestId));
+    if (unauthorized.length > 0) {
+      return NextResponse.json({ ok: false, error: "Not authorized for one or more guests" }, { status: 403 });
+    }
+
+    // Append history entries
+    // (You can batch this insert if you like; doing simple loop for clarity)
     for (const g of guests) {
       await sql`
-        insert into rsvp_guest (guest_id, attending, dietary, updated_at)
-        values (${g.guestId}, ${g.attending}, ${g.dietary ?? null}, now())
-        on conflict (guest_id) do update
-        set attending = excluded.attending,
-            dietary = excluded.dietary,
-            updated_at = now()
+        insert into rsvp_guest
+          (id, guest_id, rsvp_by, attending, tentative, gluten_free, need_transport, dietary_notes, created_at)
+        values
+          (gen_random_uuid(), ${g.guestId}, ${rsvpBy}, ${g.attending}, ${g.tentative ?? null},
+           ${g.glutenFree ?? false}, ${g.needTransport ?? null}, ${g.dietaryNotes ?? null}, now())
       `;
     }
 
-    // Upsert party-level RSVP
-    await sql`
-      insert into rsvp_party (party_id, need_transport, message, submitted_at)
-      values (${partyId}, ${needTransport}, ${message || null}, now())
-      on conflict (party_id) do update
-      set need_transport = excluded.need_transport,
-          message = excluded.message,
-          submitted_at = now()
-    `;
-
     return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    console.error(e);
     return NextResponse.json({ ok: false }, { status: 500 });
   }
-}
+};
