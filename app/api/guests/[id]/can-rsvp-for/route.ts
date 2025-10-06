@@ -2,8 +2,8 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const rsvpBy = params.id;
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: rsvpBy } = await params;
 
   // Allowed = self UNION children (self-loop may already exist)
   const rows = await sql`

@@ -12,9 +12,9 @@ type Row = {
 
 export async function GET(
   _req: Request,
-  { params }: { params: { parentId: string } }
+  { params }: { params: Promise<{ parentId: string }> }
 ) {
-  const { parentId } = params;
+  const { parentId } = await params;
 
   const rows = await sql`
     select g.id, g.first_name, g.last_name, g.is_child, g.expected_gluten_free
@@ -29,7 +29,7 @@ export async function GET(
   `;
 
   return NextResponse.json({
-    guests: rows.map((r) => ({
+    guests: rows.map(r => ({
       id: r.id,
       firstName: r.first_name,
       lastName: r.last_name,
@@ -41,10 +41,10 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { parentId: string } }
+  { params }: { params: Promise<{ parentId: string }> }
 ) {
   try {
-    const { parentId } = params;
+    const { parentId } = await params;
     const body = (await req.json()) as { children?: string[] };
     const requested = Array.from(new Set(body.children || []));
 
