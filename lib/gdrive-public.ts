@@ -21,12 +21,12 @@ type ListOpts = {
 
 /**
  * Lists images inside a public Drive folder.
- * Requires: GOOGLE_API_KEY, GDRIVE_FOLDER_ID
+ * Requires: GOOGLE_API_KEY, GDRIVE_READ_FOLDER_ID
  */
 export async function listPublicDriveImages(opts: ListOpts = {}): Promise<DriveImage[]> {
-  const folderId = opts.folderId ?? process.env.GDRIVE_FOLDER_ID!;
+  const folderId = opts.folderId ?? process.env.GDRIVE_READ_FOLDER_ID!;
   const key = process.env.GOOGLE_API_KEY!;
-  if (!folderId) throw new Error("Missing GDRIVE_FOLDER_ID");
+  if (!folderId) throw new Error("Missing GDRIVE_READ_FOLDER_ID");
   if (!key) throw new Error("Missing GOOGLE_API_KEY");
 
   const pageSize = Math.min(Math.max(opts.pageSize ?? 200, 1), 1000);

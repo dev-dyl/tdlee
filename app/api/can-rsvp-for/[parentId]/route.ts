@@ -1,5 +1,5 @@
 // app/api/can-rsvp-for/[parentId]/route.ts
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
 type Row = {
@@ -10,10 +10,11 @@ type Row = {
   expected_gluten_free: boolean;
 };
 
-type Ctx = { params: { parentId: string } };
-
-export async function GET(_req: NextRequest, { params }: Ctx) {
-  const { parentId } = params; // no await, name matches folder
+export async function GET(
+  _req: Request,
+  { params }: { params: { parentId: string } }
+) {
+  const { parentId } = params;
 
   const rows = await sql`
     select g.id, g.first_name, g.last_name, g.is_child, g.expected_gluten_free
@@ -28,7 +29,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
   `;
 
   return NextResponse.json({
-    guests: rows.map(r => ({
+    guests: rows.map((r) => ({
       id: r.id,
       firstName: r.first_name,
       lastName: r.last_name,
@@ -38,22 +39,22 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
   });
 }
 
-export async function PUT(req: NextRequest, { params }: Ctx) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { parentId: string } }
+) {
   try {
-    const { parentId } = params; // no await
+    const { parentId } = params;
     const body = (await req.json()) as { children?: string[] };
     const requested = Array.from(new Set(body.children || []));
 
-    // Verify parent exists
     const parent = await sql`select 1 from guests where id = ${parentId} limit 1`;
     if (parent.length === 0) {
       return NextResponse.json({ ok: false, error: "Parent not found" }, { status: 404 });
     }
 
-    // Ensure self-loop is present
     if (!requested.includes(parentId)) requested.push(parentId);
 
-    // Replace set
     await sql`delete from can_rsvp_for where parent = ${parentId}`;
     for (const childId of requested) {
       await sql`
