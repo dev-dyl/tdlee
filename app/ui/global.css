@@ -1,4 +1,7 @@
 @import "leaflet/dist/leaflet.css";
+@import "yet-another-react-lightbox/styles.css";
+@import "yet-another-react-lightbox/plugins/thumbnails.css";
+@import "react-photo-album/styles.css";
 
 @tailwind base;
 @tailwind components;
@@ -50,6 +53,10 @@ html { scroll-behavior: smooth; }
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --wedding-plum: 344 42% 41%;
+    --wedding-pink: 346 79% 80%;
+    --wedding-green: 53 36% 55%;
+    --wedding-forest: 53 81% 24%;
   }
   .dark {
     --background: 20 14.3% 4.1%;

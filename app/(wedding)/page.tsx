@@ -1,5 +1,5 @@
 // app/page.tsx — Server Component
-import JumpToContent from "./ui/JumpToContent";
+import JumpToContent from "../ui/JumpToContent";
 export default function Page() {
   return (
     <div className="flex w-full flex-col items-center gap-8">

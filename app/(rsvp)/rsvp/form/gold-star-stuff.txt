@@ -1,0 +1,21 @@
+<motion.button
+                type="button"
+                onClick={start}
+                aria-label="Open invitation"
+                className="pointer-events-auto"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: started ? 0.95 : 1, opacity: started ? 0 : 1 }}
+                transition={{ duration: 0.25 }}
+              >
+                <svg
+                  width="120"
+                  height="120"
+                  viewBox="0 0 100 100"
+                  className="drop-shadow-xl"
+                >
+                  <polygon
+                    points="50,5 61,38 96,38 67,58 78,91 50,72 22,91 33,58 4,38 39,38"
+                    className="fill-yellow-400"
+                  />
+                </svg>
+              </motion.button>

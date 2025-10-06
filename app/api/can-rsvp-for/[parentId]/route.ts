@@ -1,6 +1,5 @@
 // app/api/can-rsvp-for/[parentId]/route.ts
-// app/api/guests/[id]/can-rsvp-for/route.ts
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { sql } from "@/lib/db";
 
 type Row = {
@@ -11,18 +10,20 @@ type Row = {
   expected_gluten_free: boolean;
 };
 
-export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
-  const { id } = await ctx.params; // <-- await it
+type Ctx = { params: { parentId: string } };
+
+export async function GET(_req: NextRequest, { params }: Ctx) {
+  const { parentId } = params; // no await, name matches folder
 
   const rows = await sql`
     select g.id, g.first_name, g.last_name, g.is_child, g.expected_gluten_free
     from guests g
-    where g.id = ${id}
+    where g.id = ${parentId}
     union
     select g2.id, g2.first_name, g2.last_name, g2.is_child, g2.expected_gluten_free
     from can_rsvp_for c
     join guests g2 on g2.id = c.child
-    where c.parent = ${id}
+    where c.parent = ${parentId}
     order by is_child desc, last_name, first_name
   `;
 
@@ -37,9 +38,9 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   });
 }
 
-export async function PUT(req: Request, { params }: { params: { parentId: string } }) {
+export async function PUT(req: NextRequest, { params }: Ctx) {
   try {
-    const { parentId } = await params;
+    const { parentId } = params; // no await
     const body = (await req.json()) as { children?: string[] };
     const requested = Array.from(new Set(body.children || []));
 

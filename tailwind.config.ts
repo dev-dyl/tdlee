@@ -13,6 +13,12 @@ const config: Config = {
   			'13': 'repeat(13, minmax(0, 1fr))'
   		},
   		colors: {
+        wedding: {
+          plum: 'hsl(var(--wedding-plum) / <alpha-value>)',
+          pink: 'hsl(var(--wedding-pink) / <alpha-value>)',
+          green: 'hsl(var(--wedding-green) / <alpha-value>)',
+          forest: 'hsl(var(--wedding-forest) / <alpha-value>)',
+        },
   			blue: {
   				'400': '#2589FE',
   				'500': '#0070F3',
