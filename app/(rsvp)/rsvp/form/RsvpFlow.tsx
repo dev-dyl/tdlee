@@ -28,11 +28,9 @@ type Guest = {
 
 type LookupMatch = Guest;
 
-// UI form row: two radio groups (attendance + commitment)
 type GuestFormRow = {
   guestId: string;
   attending: "yes" | "no";           // maps to attending boolean
-  commitment: "definitely" | "maybe"; // maps to tentative boolean
   glutenFree: boolean;
   needTransport: boolean;
   dietaryNotes?: string;
@@ -47,7 +45,6 @@ const submitSchema = z.object({
     z.object({
       guestId: z.string().uuid(),
       attending: z.enum(["yes", "no"]),
-      commitment: z.enum(["definitely", "maybe"]),
       glutenFree: z.boolean().optional(),
       needTransport: z.boolean().optional(),
       dietaryNotes: z.string().max(500).optional(),
@@ -137,13 +134,12 @@ export default function RsvpFlow() {
 
         setAllowed(actorFirst);
 
-        // Seed rows: default to "no" attendance; commitment defaults to "definitely"
+        // Seed rows: default to "no" attendance;
         form.reset({
           rsvpBy: actor.id,
           guests: actorFirst.map((g) => ({
             guestId: g.id,
             attending: "no",
-            commitment: "definitely",
             glutenFree: !!g.expectedGlutenFree,
             needTransport: false,
             dietaryNotes: "",
@@ -174,11 +170,9 @@ export default function RsvpFlow() {
     // Map to API booleans
     const guestsPayload = (values.guests || []).map((g) => {
       const attendingBool = g.attending === "yes";
-      const tentativeVal = attendingBool ? (g.commitment === "maybe" ? true : false) : null;
       return {
         guestId: g.guestId,
         attending: attendingBool,
-        tentative: tentativeVal,
         glutenFree: !!g.glutenFree,
         needTransport: attendingBool ? !!g.needTransport : false,
         dietaryNotes: attendingBool ? (g.dietaryNotes || null) : null,
@@ -360,30 +354,8 @@ export default function RsvpFlow() {
                       </div>
                     </div>
 
-                    {/* Group 2: Commitment (only meaningful when attending=yes) */}
+                    {/* Group 2 */}
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      <div>
-                        <Label className="mb-1 block text-xs uppercase tracking-wide text-gray-500">
-                          Commitment
-                        </Label>
-                        <RadioGroup
-                          className="grid grid-cols-2 gap-2"
-                          disabled={(row?.attending ?? "no") === "no"}
-                          value={row?.commitment ?? "definitely"}
-                          onValueChange={(v: "definitely" | "maybe") =>
-                            form.setValue(`guests.${idx}.commitment` as const, v, { shouldDirty: true })
-                          }
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem id={`cm-def-${g.id}`} value="definitely" />
-                            <Label htmlFor={`cm-def-${g.id}`}>Definitely</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem id={`cm-maybe-${g.id}`} value="maybe" />
-                            <Label htmlFor={`cm-maybe-${g.id}`}>Maybe</Label>
-                          </div>
-                        </RadioGroup>
-                      </div>
 
                       {/* Options when attending */}
                       {(row?.attending ?? "no") === "yes" && (
