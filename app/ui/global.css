@@ -96,3 +96,175 @@ html { scroll-behavior: smooth; }
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer utilities {
+  /* --- THEME SWITCHERS --------------------------------------------- */
+  .wp-theme-forest { --wp-base: var(--wedding-forest); }
+  .wp-theme-plum   { --wp-base: var(--wedding-plum); }
+
+  /* --- BASE GRADIENT (uses --wp-base) ------------------------------- */
+  .wp-base {
+    @apply absolute inset-0;
+    background-image:
+      linear-gradient(
+        to bottom,
+        hsl(var(--wp-base) / 0.85),
+        hsl(var(--wp-base) / 0.95),
+        hsl(var(--wp-base) / 1)
+      );
+  }
+
+  /* =========================
+    QUATREFOIL: dot style (subtle clover grid)
+    ========================= */
+  .wp-quatrefoil {
+    @apply absolute inset-0 pointer-events-none opacity-55 mix-blend-overlay;
+    /* four corner “stamps” per tile; adjust rgba() for tint strength */
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.10) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 25%, rgba(255,255,255,0.10) 0 2px, transparent 3px),
+      radial-gradient(circle at 25% 75%, rgba(255,255,255,0.10) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.10) 0 2px, transparent 3px);
+    background-size: 48px 48px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+
+  /* Stronger “ink” version (like your wp-strong for trellis) */
+  .wp-strong .wp-quatrefoil {
+    opacity: 0.85;
+    mix-blend-mode: normal;
+    /* slightly tighter grid so the pattern reads clearer */
+    background-size: 36px 36px;
+    /* chunkier dots (2.5→3px) if you want them bolder */
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.18) 0 3px, transparent 3.5px),
+      radial-gradient(circle at 75% 25%, rgba(255,255,255,0.18) 0 3px, transparent 3.5px),
+      radial-gradient(circle at 25% 75%, rgba(255,255,255,0.18) 0 3px, transparent 3.5px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.18) 0 3px, transparent 3.5px);
+  }
+
+  /* Optional brand tints for the quatrefoil “ink” */
+  .wp-tint-pink .wp-quatrefoil {
+    background-image:
+      radial-gradient(circle at 25% 25%, hsl(var(--wedding-pink) / 0.22) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 25%, hsl(var(--wedding-pink) / 0.22) 0 2px, transparent 3px),
+      radial-gradient(circle at 25% 75%, hsl(var(--wedding-pink) / 0.22) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 75%, hsl(var(--wedding-pink) / 0.22) 0 2px, transparent 3px);
+  }
+  .wp-tint-gold .wp-quatrefoil {
+    background-image:
+      radial-gradient(circle at 25% 25%, hsl(var(--wedding-green) / 0.24) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 25%, hsl(var(--wedding-green) / 0.24) 0 2px, transparent 3px),
+      radial-gradient(circle at 25% 75%, hsl(var(--wedding-green) / 0.24) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 75%, hsl(var(--wedding-green) / 0.24) 0 2px, transparent 3px);
+  }
+
+  /* replace your current petals block with this */
+  .wp-quatrefoil-petals {
+    @apply absolute inset-0 pointer-events-none;
+    opacity: .55;
+    mix-blend-mode: overlay;
+    background-image:
+      radial-gradient(circle at 50% 0%,   rgba(255,255,255,0.10) 0 2px, transparent 2.5px),
+      radial-gradient(circle at 100% 50%, rgba(255,255,255,0.10) 0 2px, transparent 2.5px),
+      radial-gradient(circle at 50% 100%, rgba(255,255,255,0.10) 0 2px, transparent 2.5px),
+      radial-gradient(circle at 0% 50%,   rgba(255,255,255,0.10) 0 2px, transparent 2.5px);
+    background-size: 56px 56px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    background-repeat: repeat;
+  }
+
+  /* === QUATREFOIL: PETALS (large overlapping arcs) === */
+  .wp-quatrefoil-petals {
+    @apply absolute inset-0 pointer-events-none;
+    /* baseline */
+    opacity: .55;
+    mix-blend-mode: overlay;
+
+    /* Tunables (percentages scale with tile) */
+    --wp-tile: 46px;                /* tile size */
+    --wp-ink: rgba(255,255,255,.12);
+    --wp-petal: 56%;                /* arc radius as % of tile (52–60% looks good) */
+    --wp-feather: 1%;               /* soft edge thickness */
+
+    background-image:
+      radial-gradient(circle at 50% 0%,   var(--wp-ink) 0 calc(var(--wp-petal) - var(--wp-feather)), transparent var(--wp-petal)),
+      radial-gradient(circle at 100% 50%, var(--wp-ink) 0 calc(var(--wp-petal) - var(--wp-feather)), transparent var(--wp-petal)),
+      radial-gradient(circle at 50% 100%, var(--wp-ink) 0 calc(var(--wp-petal) - var(--wp-feather)), transparent var(--wp-petal)),
+      radial-gradient(circle at 0% 50%,   var(--wp-ink) 0 calc(var(--wp-petal) - var(--wp-feather)), transparent var(--wp-petal));
+    background-size: var(--wp-tile) var(--wp-tile);
+    background-position: 0 0;
+    background-repeat: repeat;
+  }
+
+  /* STRONG — PETALS (matches your strong trellis vibe) */
+  .wp-strong-quatrefoil-petals .wp-quatrefoil-petals {
+    opacity: .9;
+    mix-blend-mode: normal;
+    --wp-tile: 40px;                 /* tighter grid so the shape reads */
+    --wp-ink: hsl(var(--wedding-forest) / .24);
+    --wp-petal: 50%;                 /* a touch larger for stronger overlap */
+    --wp-feather: 1.5%;
+  }
+
+  /* Optional brand tints */
+  .wp-ink-pink .wp-quatrefoil-petals { --wp-ink: hsl(var(--wedding-pink) / .22); }
+  .wp-ink-gold .wp-quatrefoil-petals { --wp-ink: hsl(var(--wedding-green) / .24); }
+
+
+
+  /* --- TRELLIS OVERLAY ---------------------------------------------- */
+  .wp-trellis {
+    @apply absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 24px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 24px);
+    background-size: 24px 24px, 24px 24px;
+    background-position: 0 0, 0 0;
+  }
+
+  /* Subtle vertical “fabric” ribs */
+  .wp-ribs {
+    @apply absolute inset-0 pointer-events-none opacity-20 mix-blend-soft-light;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 8px);
+    background-size: 8px 100%;
+  }
+
+  /* Soft vignette */
+  .wp-vignette {
+    @apply absolute inset-0 pointer-events-none mix-blend-multiply;
+    background: radial-gradient(
+      120% 80% at 50% 20%,
+      transparent 0%,
+      transparent 60%,
+      rgba(0,0,0,0.35) 100%
+    );
+  }
+
+  /* OPTIONAL tints toward your palette */
+  .wp-tint-gold .wp-trellis {
+    background-image:
+      repeating-linear-gradient(45deg, hsl(var(--wedding-green) / 0.12) 0 2px, transparent 2px 24px),
+      repeating-linear-gradient(-45deg, hsl(var(--wedding-green) / 0.12) 0 2px, transparent 2px 24px);
+  }
+  .wp-tint-pink .wp-trellis {
+    background-image:
+      repeating-linear-gradient(45deg, hsl(var(--wedding-pink) / 0.12) 0 2px, transparent 2px 24px),
+      repeating-linear-gradient(-45deg, hsl(var(--wedding-pink) / 0.12) 0 2px, transparent 2px 24px);
+  }
+
+    /* STRONG — TRELLIS */
+  .wp-strong-trellis .wp-trellis { opacity: .9; mix-blend-mode: normal; }
+  .wp-strong-trellis .wp-ribs    { opacity: .7; mix-blend-mode: normal; }
+  .wp-strong-trellis .wp-trellis { background-size: 50px 25px, 50px 25px; }
+  .wp-strong-trellis .wp-ribs    { background-size: 12px 100%; }
+
+  /* STRONG — QUATREFOIL (dot) */
+  .wp-strong-quatrefoil .wp-quatrefoil { opacity: .9; mix-blend-mode: normal; }
+  .wp-strong-quatrefoil .wp-ribs       { opacity: .7; mix-blend-mode: normal; }
+  .wp-strong-quatrefoil .wp-quatrefoil { background-size: 36px 36px; }
+  .wp-strong-quatrefoil .wp-ribs       { background-size: 12px 100%; }
+
+
+}

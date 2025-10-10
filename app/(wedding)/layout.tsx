@@ -29,8 +29,8 @@ export default function RootLayout({
                     INFO
                   </Link>
                   <b className="text-gray-400">|</b>
-                  <Link href="/about" className="hover:underline">
-                    STORY
+                  <Link href="/registry" className="hover:underline">
+                    REGISTRY
                   </Link>
                   <b className="text-gray-400">|</b>
                   <Link href="/gallery" className="hover:underline">

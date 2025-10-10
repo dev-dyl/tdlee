@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   }
   const rows = await sql`
     with latest as (
-      select distinct on (guest_id) guest_id, attending, tentative, gluten_free, need_transport, dietary_notes, created_at
+      select distinct on (guest_id) guest_id, attending, gluten_free, need_transport, dietary_notes, created_at
       from rsvp_guest
       where guest_id = any(${guestIds})
       order by guest_id, created_at desc

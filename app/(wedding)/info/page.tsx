@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Clock, Shirt, Gift, Utensils, Wine, Car, VolumeX, Sun, Moon, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import WallpaperBackground from "@/app/ui/WallpaperBackground";
 
 const WEDDING = {
   title: "The Wedding of Taylor and Dylan",
@@ -39,14 +40,21 @@ const BRIDAL_PARTY: { role: string; names: string[] }[] = [
   { role: "Bride", names: ["Taylor Henry"] },
   { role: "Groom", names: ["Dylan Lee"] },
   // Example roles — replace placeholders below
-  { role: "Maid of Honor", names: ["Add Name"] },
-  { role: "Best Man", names: ["Add Name"] },
-  { role: "Bridesmaids", names: ["Add Name", "Add Name", "Add Name"] },
-  { role: "Groomsmen", names: ["Add Name", "Add Name", "Add Name"] },
+  { role: "Maids of Honor", names: ["Demi Camarigg", "Austin Clayton"] },
+  { role: "Best Man", names: ["Tristan Aukett"] },
+  { role: "Bridesmaids", names: ["Kami Lee", "Jorja Lee"] },
+  { role: "Groomsmen", names: ["Jordan Gibala", "Max Gobster", "Turner Henry"] },
 ];
 
 export default function FAQPage() {
   return (
+    <>
+    <WallpaperBackground
+            type="trellis"          // pick your flavor
+            theme="forest"
+            tint="pink"
+            className="!fixed inset-0 -z-10 pointer-events-none"
+          />
     <main className="mx-auto w-[min(1200px,92%)] py-12">
       {/* Header */}
       <motion.section
@@ -97,7 +105,6 @@ export default function FAQPage() {
             </Card>
           ))}
         </div>
-        <p className="mt-4 text-sm text-gray-500">Tip: Edit the <code>BRIDAL_PARTY</code> array above to add names, or remove roles you don’t need.</p>
       </motion.section>
 
       {/* FAQ */}
@@ -222,12 +229,12 @@ export default function FAQPage() {
         transition={{ duration: 0.4, delay: 0.15 }}
         className="mt-8 rounded-2xl border border-white/60 bg-white/80 p-6 text-center shadow-xl backdrop-blur-sm"
       >
-        <p className="text-gray-700">Ready to RSVP or view the registry?</p>
+        <p className="text-gray-700">Ready to RSVP or view what's next?</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <a href="#rsvp" className="inline-block rounded-lg bg-pink-500 px-6 py-3 font-medium text-white transition hover:bg-pink-600">RSVP</a>
-          <a href={WEDDING.registryPath} className="inline-block rounded-lg border border-pink-400/60 bg-white/70 px-6 py-3 font-medium text-pink-600 transition hover:bg-white">Open Registry</a>
+          <a href="/rsvp" className="inline-block rounded-lg bg-pink-500 px-6 py-3 font-medium text-white transition hover:bg-pink-600">RSVP</a>
+          <a href={WEDDING.registryPath} className="inline-block rounded-lg border border-pink-400/60 bg-white/70 px-6 py-3 font-medium text-pink-600 transition hover:bg-white">What's Next?</a>
         </div>
       </motion.section>
-    </main>
+    </main></>
   );
 }

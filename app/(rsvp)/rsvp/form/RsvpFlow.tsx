@@ -17,6 +17,8 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
+import { Higuen } from '@/app/ui/fonts';
+
 // ------- Types
 type Guest = {
   id: string;
@@ -251,7 +253,7 @@ export default function RsvpFlow() {
             <form onSubmit={onLookup} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Your full name</Label>
-                <Input id="name" placeholder="e.g., Taylor Reed" {...nameForm.register("name")} />
+                <Input id="name" placeholder="e.g., Taylor Henry" {...nameForm.register("name")} />
                 {nameForm.formState.errors.name && (
                   <p className="text-sm text-red-600">{nameForm.formState.errors.name.message}</p>
                 )}
@@ -299,23 +301,15 @@ export default function RsvpFlow() {
       {step === 1 && actor && (
         <Card className="mx-auto mt-4 w-full max-w-3xl bg-white/80 backdrop-blur">
           <CardHeader>
-            <CardTitle className="text-center">Who are you replying for?</CardTitle>
+            <CardTitle className={`text-center font-medium text-2xl ${Higuen.className}`}>Who are you replying for?</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
+          <CardContent className="space-y-2">
+            <div className="rounded-xl border ">
               <p className="text-sm text-gray-700">
                 Responding as{" "}
                 <span className="font-medium text-gray-900">
                   {actor.firstName} {actor.lastName}
                 </span>
-              </p>
-            </div>
-
-            {/* Instruction block: actor first, then note */}
-            <div className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
-              <p className="text-sm text-gray-800">
-                You’re listed first. You can RSVP for <em>everyone</em> below, or each person can complete
-                their own RSVP later.
               </p>
             </div>
 
@@ -327,16 +321,19 @@ export default function RsvpFlow() {
                 return (
                   <div key={g.id} className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="font-medium text-gray-900">
+
+                      <div className="text-xl font-medium text-gray-900">
                         {g.firstName} {g.lastName}{" "}
                         {g.isChild ? <span className="ml-1 text-xs text-gray-600">(child)</span> : null}
                         {idx === 0 && <span className="ml-2 rounded bg-pink-50 px-2 py-0.5 text-xs text-pink-700">you</span>}
                       </div>
+
                       {/* Group 1: Attendance */}
-                      <div className="sm:w-[300px]">
-                        <Label className="mb-1 block text-xs uppercase tracking-wide text-gray-500">Attendance</Label>
+                      <div className="flex items-center space-x-6 sm:w-[300px]">
+                        <div></div>
+                        <Label className="block text-xs uppercase tracking-wide text-gray-500">Attending?</Label>
                         <RadioGroup
-                          className="grid grid-cols-2 gap-2"
+                          className="grid grid-cols-2 gap-4"
                           value={row?.attending ?? "no"}
                           onValueChange={(v: "yes" | "no") =>
                             form.setValue(`guests.${idx}.attending` as const, v, { shouldDirty: true })
@@ -355,12 +352,12 @@ export default function RsvpFlow() {
                     </div>
 
                     {/* Group 2 */}
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-
+                    <div className="flex gap-3 mt-2 items-center">
                       {/* Options when attending */}
                       {(row?.attending ?? "no") === "yes" && (
-                        <div className="flex flex-wrap items-center gap-4">
-                          <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-4 shrink-0">
+                          {/* (Carpool hidden for now) */}
+                          <div className="hidden items-center gap-2">
                             <Checkbox
                               id={`transport-${g.id}`}
                               checked={!!row?.needTransport}
@@ -368,8 +365,9 @@ export default function RsvpFlow() {
                                 form.setValue(`guests.${idx}.needTransport` as const, !!v, { shouldDirty: true })
                               }
                             />
-                            <Label htmlFor={`transport-${g.id}`}>Needs shuttle</Label>
+                            <Label htmlFor={`transport-${g.id}`}>Seeking Carpool</Label>
                           </div>
+
                           <div className="flex items-center gap-2">
                             <Checkbox
                               id={`gf-${g.id}`}
@@ -382,21 +380,23 @@ export default function RsvpFlow() {
                           </div>
                         </div>
                       )}
+
+                      {(row?.attending ?? "no") === "yes" && (
+                        <div className="flex-1 min-w-0">
+                          <Label htmlFor={`diet-${g.id}`} className="block text-xs text-gray-500">Dietary notes</Label>
+                          <Textarea
+                            id={`diet-${g.id}`}
+                            className="w-full h-10 min-h-0 resize-y"
+                            placeholder="Allergies or preferences (optional)"
+                            value={row?.dietaryNotes ?? ""}
+                            onChange={(e) =>
+                              form.setValue(`guests.${idx}.dietaryNotes` as const, e.target.value, { shouldDirty: true })
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
 
-                    {(row?.attending ?? "no") === "yes" && (
-                      <div className="mt-3">
-                        <Label htmlFor={`diet-${g.id}`}>Dietary notes</Label>
-                        <Textarea
-                          id={`diet-${g.id}`}
-                          placeholder="Allergies or preferences (optional)"
-                          value={row?.dietaryNotes ?? ""}
-                          onChange={(e) =>
-                            form.setValue(`guests.${idx}.dietaryNotes` as const, e.target.value, { shouldDirty: true })
-                          }
-                        />
-                      </div>
-                    )}
 
                     {/* Insert a divider + note after the first (actor) row */}
                     {idx === 0 && allowed.length > 1 && (
@@ -485,8 +485,7 @@ export default function RsvpFlow() {
             <Button
               onClick={() => onSubmitAll()}
               disabled={
-                loading ||
-                (form.watch("guests") as GuestFormRow[]).every((g) => g.attending === "no")
+                loading
               }
             >
               {loading ? "Submitting..." : "Submit RSVP"}

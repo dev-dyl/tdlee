@@ -2,43 +2,31 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-type Row = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  is_child: boolean;
-  expected_gluten_free: boolean;
-};
-
+// GET: return the set of child IDs this parent can RSVP for (including self)
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ parentId: string }> }
 ) {
-  const { parentId } = await params;
+  try {
+    const { parentId } = await params;
 
-  const rows = await sql`
-    select g.id, g.first_name, g.last_name, g.is_child, g.expected_gluten_free
-    from guests g
-    where g.id = ${parentId}
-    union
-    select g2.id, g2.first_name, g2.last_name, g2.is_child, g2.expected_gluten_free
-    from can_rsvp_for c
-    join guests g2 on g2.id = c.child
-    where c.parent = ${parentId}
-    order by is_child desc, last_name, first_name
-  `;
+    const rows = await sql`
+      select child
+      from can_rsvp_for
+      where parent = ${parentId}::uuid
+    `;
 
-  return NextResponse.json({
-    guests: rows.map(r => ({
-      id: r.id,
-      firstName: r.first_name,
-      lastName: r.last_name,
-      isChild: r.is_child,
-      expectedGlutenFree: r.expected_gluten_free,
-    })),
-  });
+    // Always include self
+    const children = Array.from(new Set<string>([parentId, ...rows.map(r => r.child)]));
+
+    return NextResponse.json({ ok: true, parentId, children });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
 }
 
+// PUT: replace the set of children this parent can RSVP for
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ parentId: string }> }
@@ -48,18 +36,23 @@ export async function PUT(
     const body = (await req.json()) as { children?: string[] };
     const requested = Array.from(new Set(body.children || []));
 
-    const parent = await sql`select 1 from guests where id = ${parentId} limit 1`;
+    // Validate parent exists
+    const parent = await sql`select 1 from guests where id = ${parentId}::uuid limit 1`;
     if (parent.length === 0) {
       return NextResponse.json({ ok: false, error: "Parent not found" }, { status: 404 });
     }
 
+    // Ensure self is always included (but we won't store self->self)
     if (!requested.includes(parentId)) requested.push(parentId);
 
-    await sql`delete from can_rsvp_for where parent = ${parentId}`;
+    // Replace permissions
+    await sql`delete from can_rsvp_for where parent = ${parentId}::uuid`;
+
     for (const childId of requested) {
+      if (childId === parentId) continue; // keep self implicit
       await sql`
         insert into can_rsvp_for (parent, child)
-        values (${parentId}, ${childId})
+        values (${parentId}::uuid, ${childId}::uuid)
         on conflict do nothing
       `;
     }
