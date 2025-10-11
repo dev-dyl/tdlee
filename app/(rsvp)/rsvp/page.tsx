@@ -15,7 +15,7 @@ const StarList: StarAtProps[] = [
   { x: 21, y: 22, size: 70, className: "text-wedding-green" },
   { x: 75, y: 12, size: 80, className: "text-wedding-green" },
   { x: 89, y: 30, size: 110, className: "text-wedding-green" },
-  { x: 80, y: 10, size: 60, className: "text-wedding-green" },
+  { x: 72, y: 66, size: 60, className: "text-wedding-green" },
   
   { x: 80, y: 58, size: 90, className: "text-wedding-green" },
   { x: 66, y: 45, size: 130, className: "text-wedding-green" },
