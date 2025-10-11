@@ -1,3 +1,4 @@
+// app/gallery/GalleryClient.tsx
 "use client";
 
 import * as React from "react";
@@ -5,8 +6,6 @@ import Image from "next/image";
 import PhotoAlbum, { type Photo } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-
-
 
 export type GalleryItem = {
   id: string;
@@ -18,78 +17,160 @@ export type GalleryItem = {
   blurDataURL?: string;
 };
 
-type Props = { items: GalleryItem[] };
+type Props = { items: GalleryItem[]; frames?: string[] };
 
-// overlay frame
-function Frame({ children }: { children: React.ReactNode }) {
+/** String hash for seeding RNG (stable across SSR/CSR) */
+function hashString(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return h >>> 0; // unsigned
+}
+
+/** Mulberry32 PRNG for deterministic "random" */
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Random choice using seeded RNG */
+function seededChoice<T>(arr: T[], seedStr: string): T {
+  const rng = mulberry32(hashString(seedStr));
+  const idx = Math.floor(rng() * arr.length);
+  return arr[Math.min(idx, arr.length - 1)];
+}
+
+/** Pick a random applicable frame by orientation; fallback to any */
+function pickRandomFrame(
+  frames: string[] | undefined,
+  w: number,
+  h: number,
+  key: string
+) {
+  if (!frames?.length) return undefined;
+
+  const r = w / h;
+  const ORIENT =
+    r > 1.05 ? "landscape" : r < 0.95 ? "portrait" : "square";
+
+  const lower = frames.map((f) => f.toLowerCase());
+  const candidates: string[] = [];
+
+  lower.forEach((lf, i) => {
+    if (lf.includes(`-${ORIENT}.png`)) candidates.push(frames[i]);
+  });
+
+  if (candidates.length > 0) {
+    return seededChoice(candidates, `${key}:${ORIENT}`);
+  }
+  // Otherwise pick any at random (still seeded)
+  return seededChoice(frames, key);
+}
+
+/** Frame component with overlay PNG */
+function Frame({
+  children,
+  overlaySrc,
+  alt = "",
+  imageInsetPercent = 25, // photo smaller
+  frameScalePercent = 101, // frame larger
+}: {
+  children: React.ReactNode;
+  overlaySrc?: string;
+  alt?: string;
+  imageInsetPercent?: number;
+  frameScalePercent?: number;
+}) {
   return (
-    <div className="relative h-full w-full rounded-[18px]">
-      {/* Image layer */}
-      <div className="absolute inset-0 z-0 overflow-hidden rounded-[18px]">
+    <div className="relative h-full w-full">
+      {/* Photo layer: inset so it stays tucked neatly beneath the frame */}
+      <div
+        className="absolute z-0 overflow-hidden"
+        style={{
+          inset: `${imageInsetPercent}%`,
+          borderRadius: 14,
+        }}
+      >
         {children}
       </div>
 
-      {/* Mat + inner border overlays (sit ABOVE the image) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-10 rounded-[18px]"
-        style={{
-          // two inset borders = mat + frame lip
-          boxShadow:
-            "inset 0 0 0 6px #f8f5ef, inset 0 0 0 12px #d7c9b2",
-        }}
-      />
-
-      {/* Subtle glass/shine overlay */}
-      <div className="pointer-events-none absolute inset-0 z-20 rounded-[18px] bg-gradient-to-br from-white/20 to-black/10 mix-blend-overlay" />
-
-      {/* Outer ring & soft drop for definition */}
-      <div className="pointer-events-none absolute inset-0 z-20 rounded-[18px] ring-1 ring-black/10 shadow-[0_1px_3px_rgba(0,0,0,.25)]" />
+      {/* Frame overlay: scaled up slightly to overlap the photo edges */}
+      {overlaySrc && (
+        <div
+          className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center overflow-visible"
+          style={{
+            transform: `scale(${frameScalePercent / 100})`,
+            transformOrigin: "center center",
+          }}
+        >
+          <Image
+            src={overlaySrc}
+            alt={alt}
+            fill
+            className="object-contain"
+            priority={false}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
+const renderFramedPhoto =
+  (frames?: string[]) =>
+  (
+    { onClick }: { onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement> },
+    { photo, width, height }: { photo: Photo; width: number; height: number }
+  ) => {
+    const blur = (photo as any).blurDataURL as string | undefined;
+    const id = (photo as any).id as string | undefined;
+
+    const overlay = pickRandomFrame(
+      frames,
+      photo.width!,
+      photo.height!,
+      id || (photo.src as string)
+    );
+
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        style={{ width: Math.round(width), height: Math.round(height), position: "relative" }}
+        className="block cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-wedding-plum/60 rounded-2xl"
+        aria-label={photo.alt || "Open photo"}
+      >
+        <Frame overlaySrc={overlay} imageInsetPercent={10}>
+          <Image
+            src={photo.src as string}
+            alt={photo.alt || ""}
+            fill
+            sizes={`${Math.ceil(width)}px`}
+            className="object-cover transition-transform overflow-hidden duration-300 hover:scale-[1.02]"
+            placeholder={blur ? "blur" : "empty"}
+            blurDataURL={blur}
+          />
+        </Frame>
+      </button>
+    );
+  };
 
 
-const renderFramedPhoto = (
-  { onClick }: { onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement> },
-  { photo, width, height }: { photo: Photo; width: number; height: number }
-) => {
-  const blur = (photo as any).blurDataURL as string | undefined;
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{ width: Math.round(width), height: Math.round(height), position: "relative" }}
-      className="block cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-wedding-plum/60 rounded-2xl"
-      aria-label={photo.alt || "Open photo"}
-    >
-      <Frame>
-        <Image
-          src={photo.src as string}
-          alt={photo.alt || ""}
-          fill
-          sizes={`${Math.ceil(width)}px`}
-          className="object-cover transition-transform overflow-hidden duration-300 hover:scale-[1.02]"
-          placeholder={blur ? "blur" : "empty"}
-          blurDataURL={blur}
-        />
-      </Frame>
-    </button>
-  );
-};
-
-export default function GalleryClient({ items }: Props) {
+export default function GalleryClient({ items, frames }: Props) {
   const [index, setIndex] = React.useState<number>(-1);
 
   const photos = React.useMemo<Photo[]>(
     () =>
-      items.map(({ src, width, height, alt, blurDataURL }) => ({
+      items.map(({ id, src, width, height, alt, blurDataURL }) => ({
+        id,
         src,
         width,
         height,
         alt,
-        blurDataURL, // keep it on the object so render.photo can access it
+        blurDataURL,
       })),
     [items]
   );
@@ -112,7 +193,7 @@ export default function GalleryClient({ items }: Props) {
           if (containerWidth < 1200) return 3;
           return 4;
         }}
-        render={{ photo: renderFramedPhoto }}
+        render={{ photo: renderFramedPhoto(frames) }}
         onClick={({ index: i }) => setIndex(i)}
       />
 
