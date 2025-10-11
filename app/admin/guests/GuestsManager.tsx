@@ -237,7 +237,7 @@ export default function GuestsManager() {
                         onClick={() => selectParent(g)}
                         className={cn(
                           "w-full rounded-md border px-3 py-2 text-left text-sm transition hover:bg-white",
-                          parent?.id === g.id ? "border-pink-500 ring-1 ring-pink-500" : "border-gray-200"
+                          parent?.id === g.id ? "border-wedding-plum ring-1 ring-wedding-plum" : "border-gray-200"
                         )}
                       >
                         <span className="font-medium text-gray-900">

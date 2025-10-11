@@ -26,7 +26,7 @@ function useMediaQuery(query: string) {
 export default function BackgroundParallax() {
   const factor = 0.08;      // parallax strength
   const scale  = 1.2;       // image overscan
-  const baseOffset = 200;   // desired upward offset (px)
+  const baseOffset = 150;   // desired upward offset (px)
 
   const [y, setY] = useState(0);
   const [limit, setLimit] = useState(0);

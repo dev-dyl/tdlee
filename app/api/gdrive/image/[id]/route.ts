@@ -14,7 +14,7 @@ export async function GET(req: Request, ctx: RouteCtx) {
   if (!id) return new Response("Missing id", { status: 400 });
   if (!key) return new Response("Missing GOOGLE_API_KEY", { status: 500 });
 
-  // Prefer explicit origin for Google’s HTTP referrer checks
+  // Prefer explicit origin for Google's HTTP referrer checks
   const devOrigin = "http://localhost:3000";
   const prodOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`

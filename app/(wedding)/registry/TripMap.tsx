@@ -126,7 +126,7 @@ export default function TripMap() {
         className="h-full w-full"
         center={[34.5, -112] as LatLngTuple}
         zoom={6}
-        scrollWheelZoom
+        //scrollWheelZoom
         // default renderer is SVG (needed for the path animation)
       >
         <TileLayer

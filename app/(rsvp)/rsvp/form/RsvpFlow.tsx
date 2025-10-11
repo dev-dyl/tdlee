@@ -100,7 +100,7 @@ export default function RsvpFlow() {
     }
   });
 
-  // Steps 1–2
+  // Steps 1-2
   const form = useForm<SubmitValues>({
     resolver: zodResolver(submitSchema),
     defaultValues: {
@@ -228,7 +228,7 @@ export default function RsvpFlow() {
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className={cn("h-2 w-8 rounded-full transition", i <= step ? "bg-pink-500" : "bg-gray-300")}
+          className={cn("h-2 w-8 rounded-full transition", i <= step ? "bg-wedding-plum" : "bg-gray-300")}
         />
       ))}
     </div>
@@ -274,7 +274,7 @@ export default function RsvpFlow() {
                         onClick={() => setActor(m)}
                         className={cn(
                           "rounded-lg border px-4 py-3 text-left transition hover:bg-white",
-                          actor?.id === m.id ? "border-pink-500 ring-1 ring-pink-500" : "border-gray-200"
+                          actor?.id === m.id ? "border-wedding-plum ring-1 ring-wedding-plum" : "border-gray-200"
                         )}
                       >
                         <div className="font-medium text-gray-900">
@@ -403,7 +403,7 @@ export default function RsvpFlow() {
                       <div className="mt-4">
                         <Separator />
                         <p className="mt-2 text-xs text-gray-600">
-                          You can check responses for everyone above—or each person can reply later on their own.
+                          You can check responses for everyone below—or each person can reply later on their own.
                         </p>
                       </div>
                     )}

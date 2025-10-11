@@ -2,7 +2,6 @@
 import { listPublicDriveImages } from "@/lib/gdrive-public";
 import { toDataURL } from "@/lib/blur";
 import GalleryClient from "./GalleryClient";
-import WallpaperBackground from "@/app/ui/WallpaperBackground"; // <-- add this
 
 export const runtime = "nodejs";
 export const revalidate = 3600; // 1h ISR
@@ -33,7 +32,7 @@ export default async function GalleryPage() {
   );
 
   return (
-    <div className="mx-auto w-[min(1600px,92%)] py-10">
+    <div className="mx-auto w-[min(1600px,92%)]">
         <GalleryClient items={items} />
     </div>
   );

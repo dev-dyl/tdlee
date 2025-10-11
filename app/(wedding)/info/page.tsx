@@ -10,6 +10,8 @@ import { MapPin, Clock, Shirt, Gift, Utensils, Wine, Car, VolumeX, Sun, Moon, Us
 import { motion } from "framer-motion";
 import WallpaperBackground from "@/app/ui/WallpaperBackground";
 
+import { Higuen } from '@/app/ui/fonts';
+
 const WEDDING = {
   title: "The Wedding of Taylor and Dylan",
   tagline: "A night under the stars",
@@ -20,16 +22,16 @@ const WEDDING = {
   dress: "Cocktail Attire",
   itinerary: {
     arrival: "3:30 PM",
-    ceremony: "4:00 – ~4:30 PM",
-    cocktails: "~4:30 – 5:30 PM",
-    dinnerReception: "5:30 PM – Evening",
+    ceremony: "4:00 - ~4:30 PM",
+    cocktails: "~4:30 - 5:30 PM",
+    dinnerReception: "5:30 PM - Evening",
     quietHours: "10:00 PM",
   },
-  dinner: "Pizza (gluten‑free options available)",
+  dinner: "Pizza (gluten-free options available)",
   drinks: "Beer, Wine, and Mixed Drinks (provided)",
   gifting: "Not required — registry available",
   registryPath: "/registry",
-  parking: "Semi‑limited (~10 cars)",
+  parking: "Semi-limited (~10 cars)",
   carpool: "Contact us to coordinate",
   environment: "Outdoors, inside available; forecast high 71° / low 48°",
 };
@@ -38,11 +40,11 @@ const WEDDING = {
 // Fill in names as needed. You can remove roles that don't apply.
 const BRIDAL_PARTY: { role: string; names: string[] }[] = [
   { role: "Bride", names: ["Taylor Henry"] },
-  { role: "Groom", names: ["Dylan Lee"] },
-  // Example roles — replace placeholders below
   { role: "Maids of Honor", names: ["Demi Camarigg", "Austin Clayton"] },
-  { role: "Best Man", names: ["Tristan Aukett"] },
   { role: "Bridesmaids", names: ["Kami Lee", "Jorja Lee"] },
+  // Example roles — replace placeholders below
+  { role: "Groom", names: ["Dylan Lee"] },
+  { role: "Best Man", names: ["Tristan Aukett"] },
   { role: "Groomsmen", names: ["Jordan Gibala", "Max Gobster", "Turner Henry"] },
 ];
 
@@ -55,7 +57,7 @@ export default function FAQPage() {
             tint="pink"
             className="!fixed inset-0 -z-10 pointer-events-none"
           />
-    <main className="mx-auto w-[min(1200px,92%)] py-12">
+    <main className="mx-auto w-[min(1200px,92%)] ">
       {/* Header */}
       <motion.section
         initial={{ opacity: 0, y: 12 }}
@@ -64,9 +66,9 @@ export default function FAQPage() {
         className="rounded-2xl border border-white/60 bg-white/80 p-8 shadow-xl backdrop-blur-sm"
       >
         <div className="text-center">
-          <p className="text-sm tracking-wide text-gray-700">{WEDDING.date} • {WEDDING.city} • {WEDDING.time}</p>
-          <h1 className="mt-2 text-4xl font-semibold text-gray-800">FAQ & Details</h1>
+          <h1 className={`mb-3 text-5xl ${Higuen.className} text-gray-900 text-center`}>FAQ & Details</h1>
           <p className="mt-1 text-base text-gray-600">{WEDDING.title}</p>
+          <p className="text-sm tracking-wide text-gray-700">{WEDDING.date} • {WEDDING.city} • {WEDDING.time}</p>
           <p className="mt-1 text-sm tracking-wide text-gray-600">{WEDDING.tagline}</p>
 
           {/* Quick info chips */}
@@ -85,27 +87,43 @@ export default function FAQPage() {
         transition={{ duration: 0.4, delay: 0.05 }}
         className="mt-8 rounded-2xl border border-white/60 bg-white/80 p-8 shadow-xl backdrop-blur-sm"
       >
-        <div className="mb-6 flex items-center gap-2">
-          <Users className="h-5 w-5 text-gray-700" />
-          <h2 className="text-2xl font-semibold text-gray-800">Bridal Party</h2>
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {BRIDAL_PARTY.map(({ role, names }) => (
-            <Card key={role} className="bg-white/80">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-gray-900">{role}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-gray-700">
-                <ul className="list-disc pl-5">
-                  {names.map((n, i) => (
-                    <li key={i}>{n}</li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <h2 className={`mb-5 text-4xl ${Higuen.className} text-gray-800 text-center`}>Bridal Party</h2>
+
+        {(() => {
+          const mid = Math.ceil(BRIDAL_PARTY.length / 2);
+          const columns = [BRIDAL_PARTY.slice(0, mid), BRIDAL_PARTY.slice(mid)];
+
+          return (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {columns.map((col, colIdx) => (
+                <Card
+                  key={colIdx}
+                  className="bg-white/80 border-white/60 shadow-sm"
+                >
+                  <CardContent className="p-6 flex flex-col items-center justify-center text-center">
+                    {col.map(({ role, names }, idx) => (
+                      <div key={`${role}-${idx}`} className="flex flex-col items-center justify-center">
+                        <p className="text-base font-semibold text-gray-900">{role}</p>
+                        {names.map((n, i) => (
+                          <p key={i} className="text-gray-700">
+                            {n}
+                          </p>
+                        ))}
+                        {/* Separator between groups, not after the last */}
+                        {idx < col.length - 1 && (
+                          <span className="my-3 text-gray-400 select-none">—</span>
+                        )}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          );
+        })()}
       </motion.section>
+
+
 
       {/* FAQ */}
       <motion.section
@@ -114,7 +132,7 @@ export default function FAQPage() {
         transition={{ duration: 0.4, delay: 0.1 }}
         className="mt-8 rounded-2xl border border-white/60 bg-white/80 p-6 shadow-xl backdrop-blur-sm"
       >
-        <h2 className="mb-2 text-center text-2xl font-semibold text-gray-800">Frequently Asked Questions</h2>
+        <h2 className={`mb-4 text-4xl ${Higuen.className} text-gray-800 text-center`}>Frequently Asked Questions</h2>
         <p className="mb-4 text-center text-sm text-gray-600">Everything you might be wondering for the big day.</p>
         <Separator className="mb-4" />
 
@@ -129,7 +147,7 @@ export default function FAQPage() {
                 <p><span className="font-medium">Date:</span> {WEDDING.date}</p>
                 <p><span className="font-medium">Time:</span> {WEDDING.time} (ceremony start)</p>
                 <p className="flex items-center gap-2"><MapPin className="h-4 w-4" /> <span>{WEDDING.addressLine}</span></p>
-                <a href={`https://maps.google.com/?q=${encodeURIComponent(WEDDING.addressLine)}`} className="inline-block text-pink-600 underline underline-offset-4 hover:text-pink-700">Open in Maps</a>
+                <a href={`https://maps.google.com/?q=${encodeURIComponent(WEDDING.addressLine)}`} className="inline-block text-wedding-plum underline underline-offset-4 hover:text-pink-700">Open in Maps</a>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -140,14 +158,14 @@ export default function FAQPage() {
               <div className="flex items-center gap-2"><Shirt className="h-4 w-4" /> What should I wear?</div>
             </AccordionTrigger>
             <AccordionContent>
-              <p className="text-gray-700">{WEDDING.dress}. The celebration is mostly outdoors on a backyard surface — outdoor‑friendly footwear recommended, and bring a light layer for the evening.</p>
+              <p className="text-gray-700">We kindly request that you wear {WEDDING.dress}. The celebration is mostly outdoors on a backyard surface — outdoor-friendly footwear recommended, and bring a light layer for the evening. If you have questions regarding your attire, don't hesitate to reach out to us.</p>
             </AccordionContent>
           </AccordionItem>
 
           {/* Schedule */}
           <AccordionItem value="schedule">
             <AccordionTrigger className="text-left text-gray-900">
-              <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> What’s the schedule?</div>
+              <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> What's the schedule?</div>
             </AccordionTrigger>
             <AccordionContent>
               <ul className="list-disc space-y-1 pl-5 text-gray-700">
@@ -163,7 +181,7 @@ export default function FAQPage() {
           {/* Food & Drinks */}
           <AccordionItem value="food-drinks">
             <AccordionTrigger className="text-left text-gray-900">
-              <div className="flex items-center gap-2"><Utensils className="h-4 w-4" /> What’s for dinner? Are drinks provided?</div>
+              <div className="flex items-center gap-2"><Utensils className="h-4 w-4" /> What's for dinner? Are drinks provided?</div>
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-2 text-gray-700">
@@ -180,7 +198,7 @@ export default function FAQPage() {
               <div className="flex items-center gap-2"><Gift className="h-4 w-4" /> Do you have a registry?</div>
             </AccordionTrigger>
             <AccordionContent>
-              <p className="text-gray-700">Gifts are not required. For those who have asked, our registry can be found here: <a href="/registry" className="text-pink-600 underline underline-offset-4 hover:text-pink-700">registry</a>.</p>
+              <p className="text-gray-700">Gifts are not required. For those who have asked, our registry can be found here: <a href="/registry" className="text-wedding-plum underline underline-offset-4 hover:text-pink-700">registry</a>.</p>
             </AccordionContent>
           </AccordionItem>
 
@@ -203,7 +221,7 @@ export default function FAQPage() {
               <div className="flex items-center gap-2"><VolumeX className="h-4 w-4" /> What time do things wrap up?</div>
             </AccordionTrigger>
             <AccordionContent>
-              <p className="text-gray-700">To respect our neighbors, we’ll wind down by <span className="font-medium">{WEDDING.itinerary.quietHours}</span>.</p>
+              <p className="text-gray-700">To respect our neighbors, we'll wind down by <span className="font-medium">{WEDDING.itinerary.quietHours}</span>.</p>
             </AccordionContent>
           </AccordionItem>
 
@@ -231,8 +249,8 @@ export default function FAQPage() {
       >
         <p className="text-gray-700">Ready to RSVP or view what's next?</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <a href="/rsvp" className="inline-block rounded-lg bg-pink-500 px-6 py-3 font-medium text-white transition hover:bg-pink-600">RSVP</a>
-          <a href={WEDDING.registryPath} className="inline-block rounded-lg border border-pink-400/60 bg-white/70 px-6 py-3 font-medium text-pink-600 transition hover:bg-white">What's Next?</a>
+          <a href="/rsvp" className="inline-block rounded-lg bg-wedding-plum px-6 py-3 font-medium text-white transition hover:bg-wedding-plum">RSVP</a>
+          <a href={WEDDING.registryPath} className="inline-block rounded-lg border border-wedding-plum/60 bg-white/70 px-6 py-3 font-medium text-wedding-plum transition hover:bg-white">What's Next?</a>
         </div>
       </motion.section>
     </main></>

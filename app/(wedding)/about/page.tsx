@@ -20,7 +20,7 @@ const baseEvents: EventItem[] = [
   {
     iso: "2018-10-31",
     date: "10/31/2018",
-    title: "Dave & Buster’s – Halloween",
+    title: "Dave & Buster's - Halloween",
     body: "Unicorn Ring Toss, games, and spooky vibes.",
   },
   {
@@ -83,7 +83,7 @@ const baseEvents: EventItem[] = [
   // 2023
   {
     iso: "2023-01-01",
-    date: "New Year’s 2023",
+    date: "New Year's 2023",
     title: "Disneyland #2",
     body: "Rang in the new year with churros and fireworks.",
   },
@@ -91,7 +91,7 @@ const baseEvents: EventItem[] = [
     iso: "2023-03-01",
     date: "March 2023",
     title: "Leveling Up",
-    body: "Moved in with Taylor’s parents • Taylor finished her degree • We started saving for marriage",
+    body: "Moved in with Taylor's parents • Taylor finished her degree • We started saving for marriage",
   },
   {
     iso: "2023-09-01",
@@ -119,7 +119,7 @@ const baseEvents: EventItem[] = [
     iso: "2025-11-14",
     date: "Nov 2025",
     title: "Wedding",
-    body: "We can’t wait to celebrate with you.",
+    body: "We can't wait to celebrate with you.",
   },
 ];
 
@@ -140,14 +140,14 @@ function birthdayEvents(fromYear: number, toYear: number): EventItem[] {
     out.push({
       iso: `${y}-01-26`,
       date: `Jan 26, ${y}`,
-      title: "Dylan’s Birthday 🎂",
+      title: "Dylan's Birthday 🎂",
       body: `Dylan turned ${dylanAge}.`,
       tag: "dylan-bday",
     });
     out.push({
       iso: `${y}-05-27`,
       date: `May 27, ${y}`,
-      title: "Taylor’s Birthday 🎂",
+      title: "Taylor's Birthday 🎂",
       body: `Taylor turned ${taylorAge}.`,
       tag: "taylor-bday",
     });

@@ -1,6 +1,7 @@
 // app/page.tsx — Server Component (updated with Taylor & Dylan's details)
 import JumpToContent from "../ui/JumpToContent";
 import BackgroundParallax from "@/app/ui/BackgroundParallax";
+import { Higuen } from '@/app/ui/fonts';
 
 export default function Page() {
   return (
@@ -8,7 +9,7 @@ export default function Page() {
       <BackgroundParallax />
       <div className="flex w-full flex-col items-center gap-8">
         {/* Spacer to reveal the parallax background before content */}
-        <div className="h-[100vh] md:h-[100vh]" aria-hidden />
+        <div className="h-[70vh] md:h-[70vh]" aria-hidden />
 
         <JumpToContent targetId="content" />
 
@@ -21,25 +22,23 @@ export default function Page() {
         >
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-medium tracking-wide text-gray-700">November 14, 2025 • Peoria, AZ • 4:00 PM</p>
-            <h1 className="mt-2 text-4xl md:text-5xl font-semibold text-gray-800">
-              The Wedding of Taylor and Dylan
+            <h1 className={`mt-0 text-4xl md:text-5xl ${Higuen.className} text-gray-800`}>
+              A night under the stars
             </h1>
-            <p className="mt-2 text-base tracking-wide text-gray-600">A night under the stars</p>
             <p className="mx-auto mt-4 max-w-2xl text-gray-700">
-              We can’t wait to celebrate with you in our backyard. Your presence is truly the greatest gift —
-              if you’d still like to contribute, you’ll find our registry below.
+              We can't wait to celebrate with you in our backyard. Your presence is truly the greatest gift.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <a
-                href="#rsvp"
-                className="inline-block rounded-lg bg-pink-500 px-6 py-3 font-medium text-white transition hover:bg-pink-600"
+                href="/rsvp"
+                className="inline-block rounded-lg bg-wedding-plum px-6 py-3 font-medium text-white transition hover:bg-wedding-plum"
               >
                 RSVP
               </a>
               <a
                 href="/registry"
-                className="inline-block rounded-lg border border-pink-400/60 bg-white/70 px-6 py-3 font-medium text-pink-600 transition hover:bg-white"
+                className="inline-block rounded-lg border border-wedding-plum/60 bg-white/70 px-6 py-3 font-medium text-wedding-plum transition hover:bg-white"
               >
                 View Registry
               </a>
@@ -53,7 +52,7 @@ export default function Page() {
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
                 <h3 className="font-semibold text-gray-900">Where</h3>
-                <p className="mt-1 text-gray-700">Backyard Wedding</p>
+                <p className="mt-1 text-gray-700">7015 W. Calavar Rd, Peoria, AZ 85381</p>
                 <p className="text-gray-700">Peoria, Arizona</p>
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
@@ -74,34 +73,34 @@ export default function Page() {
           aria-labelledby="schedule-heading"
         >
           <div className="mx-auto max-w-4xl">
-            <h2 id="schedule-heading" className="text-3xl font-semibold text-gray-800 text-center">
+            <h2 id="schedule-heading" className={`text-4xl ${Higuen.className} text-gray-800 text-center`}>
               Schedule
             </h2>
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-5">
-                <p className="text-sm font-medium text-pink-600">3:30 PM</p>
+                <p className="text-sm font-medium text-wedding-plum">3:30 PM</p>
                 <h3 className="mt-1 font-semibold text-gray-900">Guest Arrival</h3>
                 <p className="mt-1 text-gray-700">Grab a seat and say hello.</p>
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-5">
-                <p className="text-sm font-medium text-pink-600">4:00 – ~4:30 PM</p>
+                <p className="text-sm font-medium text-wedding-plum">4:00 - ~4:30 PM</p>
                 <h3 className="mt-1 font-semibold text-gray-900">Ceremony</h3>
                 <p className="mt-1 text-gray-700">Dylan & Taylor say “I do”.</p>
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-5">
-                <p className="text-sm font-medium text-pink-600">~4:30 – 5:30 PM</p>
+                <p className="text-sm font-medium text-wedding-plum">~4:30 - 5:30 PM</p>
                 <h3 className="mt-1 font-semibold text-gray-900">Cocktail Hour</h3>
                 <p className="mt-1 text-gray-700">Mix, mingle, and enjoy drinks & apps.</p>
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-5 sm:col-span-2">
-                <p className="text-sm font-medium text-pink-600">5:30 PM – Evening</p>
+                <p className="text-sm font-medium text-wedding-plum">5:30 PM - Evening</p>
                 <h3 className="mt-1 font-semibold text-gray-900">Dinner & Reception</h3>
-                <p className="mt-1 text-gray-700">Pizza dinner (gluten‑free options), toasts, and dancing.</p>
+                <p className="mt-1 text-gray-700">Pizza dinner (gluten-free options), toasts, and dancing.</p>
               </div>
               <div className="rounded-xl border border-gray-200/70 bg-white/70 p-5">
-                <p className="text-sm font-medium text-pink-600">10:00 PM</p>
+                <p className="text-sm font-medium text-wedding-plum">10:00 PM</p>
                 <h3 className="mt-1 font-semibold text-gray-900">Noise Cutoff</h3>
-                <p className="mt-1 text-gray-700">We’ll wind down to respect the neighborhood.</p>
+                <p className="mt-1 text-gray-700">We'll wind down to respect the neighborhood.</p>
               </div>
             </div>
           </div>
@@ -117,7 +116,7 @@ export default function Page() {
         >
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <h2 id="venue-heading" className="text-3xl font-semibold text-gray-800">
+              <h2 id="venue-heading" className={`text-4xl ${Higuen.className} text-gray-800 text-center`}>
                 Venue
               </h2>
               <p className="mt-3 text-gray-700">
@@ -129,13 +128,13 @@ export default function Page() {
                 <p className="text-gray-700">7015 W. Calavar Rd, Peoria, AZ 85381</p>
                 <a
                   href="https://maps.google.com/?q=7015%20W.%20Calavar%20Rd,%20Peoria,%20AZ%2085381"
-                  className="inline-block text-pink-600 underline underline-offset-4 hover:text-pink-700"
+                  className="inline-block text-wedding-plum underline underline-offset-4 hover:text-pink-700"
                 >
                   Open in Maps
                 </a>
               </div>
               <ul className="mt-4 list-disc pl-5 text-gray-700">
-                <li>Parking is semi‑limited (~10 cars). Please carpool if you can.</li>
+                <li>Parking is semi-limited (~10 cars). Please carpool if you can.</li>
                 <li>Contact us to coordinate rides/carpool options.</li>
                 <li>Expected weather: high 71° / low 48°. Bring a layer for the evening.</li>
               </ul>
@@ -162,45 +161,17 @@ export default function Page() {
           className="w-[min(2200px,92%)] rounded-2xl border border-white/60 bg-white/80 p-8 shadow-xl backdrop-blur-sm"
         >
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-3xl font-semibold text-gray-800 text-center">Food & Drinks</h2>
+            <h2 className={`text-4xl ${Higuen.className} text-gray-800 text-center`}>Food & Drinks</h2>
             <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-6">
                 <h3 className="font-semibold text-gray-900">Dinner</h3>
-                <p className="mt-2 text-gray-700">Pizza dinner with gluten‑free options available.</p>
+                <p className="mt-2 text-gray-700">Pizza dinner with gluten-free options available.</p>
               </div>
               <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-6">
                 <h3 className="font-semibold text-gray-900">Drinks</h3>
                 <p className="mt-2 text-gray-700">Beer, wine, and mixed drinks will be provided.</p>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* ====================== */}
-        {/* Band 5: Gallery CTA    */}
-        {/* ====================== */}
-        <section
-          id="gallery"
-          className="w-[min(2200px,92%)] rounded-2xl border border-white/60 bg-white/80 p-8 shadow-xl backdrop-blur-sm"
-        >
-          <div className="mx-auto max-w-5xl text-center">
-            <h2 className="text-3xl font-semibold text-gray-800">Photo Gallery</h2>
-            <p className="mt-2 text-gray-700">A few favorites—see the full gallery for more.</p>
-
-            {/* Mini preview grid (replace with your images) */}
-            <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-              <div className="aspect-[4/3] rounded-xl bg-gray-200/60"></div>
-              <div className="aspect-[4/3] rounded-xl bg-gray-200/60"></div>
-              <div className="aspect-[4/3] rounded-xl bg-gray-200/60"></div>
-              <div className="aspect-[4/3] rounded-xl bg-gray-200/60"></div>
-            </div>
-
-            <a
-              href="#"
-              className="mt-6 inline-block rounded-lg bg-gray-900 px-6 py-3 font-medium text-white transition hover:bg-black"
-            >
-              View Full Gallery
-            </a>
           </div>
         </section>
 
@@ -212,48 +183,25 @@ export default function Page() {
           className="w-[min(2200px,92%)] rounded-2xl border border-white/60 bg-white/80 p-8 text-center shadow-xl backdrop-blur-sm"
         >
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-3xl font-semibold text-gray-800">RSVP</h2>
+            <h2 className={`text-4xl ${Higuen.className} text-gray-800 text-center`}>RSVP</h2>
             <p className="mt-2 text-gray-700">
               Kindly let us know if you can join us. If you have dietary preferences, please include them with your response.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <a
                 href="#" // Replace with your RSVP form link
-                className="inline-block rounded-lg bg-pink-500 px-6 py-3 font-medium text-white transition hover:bg-pink-600"
+                className="inline-block rounded-lg bg-wedding-plum px-6 py-3 font-medium text-white transition hover:bg-wedding-plum"
               >
                 Respond Online
               </a>
               <a
                 href="mailto:?subject=Wedding%20RSVP%20—%20Taylor%20%26%20Dylan"
-                className="inline-block rounded-lg border border-pink-400/60 bg-white/70 px-6 py-3 font-medium text-pink-600 transition hover:bg-white"
+                className="inline-block rounded-lg border border-wedding-plum/60 bg-white/70 px-6 py-3 font-medium text-wedding-plum transition hover:bg-white"
               >
                 Email Your RSVP
               </a>
             </div>
-            <p className="mt-4 text-sm text-gray-600">Gifts are not required. If you’d like, you can visit our <a href="/registry" className="text-pink-600 underline underline-offset-4 hover:text-pink-700">registry</a>.</p>
-          </div>
-        </section>
-
-        {/* ====================== */}
-        {/* Band 7: Registry       */}
-        {/* ====================== */}
-        <section
-          id="registry"
-          className="w-[min(2200px,92%)] rounded-2xl border border-white/60 bg-white/80 p-8 shadow-xl backdrop-blur-sm"
-        >
-          <div className="mx-auto max-w-4xl text-center">
-            <h2 className="text-3xl font-semibold text-gray-800">Registry</h2>
-            <p className="mt-2 text-gray-700">
-              Your presence is more than enough. For those who’ve asked, our registry is linked below.
-            </p>
-            <div className="mt-6 flex items-center justify-center">
-              <a
-                href="/registry"
-                className="rounded-xl border border-gray-200/70 bg-white/70 px-8 py-4 text-left font-semibold text-gray-900 transition hover:bg-white"
-              >
-                Open Registry
-              </a>
-            </div>
+            <p className="mt-4 text-sm text-gray-600">Gifts are not required. If you'd like, you can visit our <a href="/registry" className="text-wedding-plum underline underline-offset-4 hover:text-pink-700">registry</a>.</p>
           </div>
         </section>
 
@@ -266,13 +214,13 @@ export default function Page() {
           aria-labelledby="info-heading"
         >
           <div className="mx-auto max-w-3xl">
-            <h2 id="info-heading" className="text-3xl font-semibold text-gray-800 text-center">
+            <h2 id="info-heading" className={`text-4xl ${Higuen.className} text-gray-800 text-center`}>
               Good to Know
             </h2>
             <ul className="mt-6 space-y-3">
               <li className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
                 <p className="mt-1 font-medium text-gray-900">Parking</p>
-                <p className="text-gray-700">Semi‑limited (~10 cars). Please carpool when possible.</p>
+                <p className="text-gray-700">Semi-limited (~10 cars). Please carpool when possible.</p>
               </li>
               <li className="rounded-xl border border-gray-200/70 bg-white/70 p-4">
                 <p className="mt-1 font-medium text-gray-900">Carpool</p>

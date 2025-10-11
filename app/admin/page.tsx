@@ -19,7 +19,7 @@ export default function AdminHomePage() {
           className="group block rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm backdrop-blur transition hover:shadow-md"
         >
           <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-pink-50 p-2 text-pink-600">
+            <div className="rounded-lg bg-pink-50 p-2 text-wedding-plum">
               <Users className="h-5 w-5" aria-hidden />
             </div>
             <div>
@@ -29,7 +29,7 @@ export default function AdminHomePage() {
               <p className="mt-1 text-sm text-gray-600">
                 Add guests, build parties, and edit RSVP targets.
               </p>
-              <span className="mt-3 inline-flex items-center text-sm font-medium text-pink-600 transition group-hover:translate-x-0.5">
+              <span className="mt-3 inline-flex items-center text-sm font-medium text-wedding-plum transition group-hover:translate-x-0.5">
                 Open →
               </span>
             </div>

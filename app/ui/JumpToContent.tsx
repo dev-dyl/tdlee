@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 type Props = {
   targetId: string;           // e.g., "content"
-  threshold?: number;         // how much of the section must be visible (0–1)
+  threshold?: number;         // how much of the section must be visible (0-1)
   rootMargin?: string;        // expand/shrink viewport for intersection
 };
 
@@ -42,7 +42,7 @@ export default function JumpToContent({
         h-20 w-20 grid place-items-center rounded-full border border-white/60
         bg-white/60 backdrop-blur shadow-xl ring-1 ring-black/5
         transition duration-300 ease-out
-        hover:bg-white hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400
+        hover:bg-white hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-wedding-plum
         ${hidden ? "opacity-0 pointer-events-none translate-y-1" : "opacity-95"}
       `}
     >

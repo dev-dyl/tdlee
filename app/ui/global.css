@@ -185,7 +185,7 @@ html { scroll-behavior: smooth; }
     /* Tunables (percentages scale with tile) */
     --wp-tile: 46px;                /* tile size */
     --wp-ink: rgba(255,255,255,.12);
-    --wp-petal: 56%;                /* arc radius as % of tile (52–60% looks good) */
+    --wp-petal: 56%;                /* arc radius as % of tile (52-60% looks good) */
     --wp-feather: 1%;               /* soft edge thickness */
 
     background-image:

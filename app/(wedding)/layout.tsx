@@ -19,8 +19,8 @@ export default function RootLayout({
               <h1 className={`${Higuen.className} text-5xl text-wedding-forest`}>
                 The Wedding of Taylor and Dylan
               </h1>
-              <nav className="mt-4">
-                <div className="flex justify-center gap-6 text-lg text-gray-700">
+              <nav className="mt-6">
+                <div className="flex flex-wrap justify-center gap-5 text-lg text-gray-700">
                   <Link href="/" className="hover:underline">
                     HOME
                   </Link>
