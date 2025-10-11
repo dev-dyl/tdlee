@@ -120,7 +120,7 @@ export default function Page() {
                 Venue
               </h2>
               <p className="mt-3 text-gray-700">
-                Ceremony and reception will be in our backyard. Most of the evening will be outdoors, with indoor
+                Ceremony and reception will be in the backyard. Most of the evening will be outdoors, with indoor
                 space available for comfort.
               </p>
               <div className="mt-4 space-y-1 text-gray-800">
@@ -140,13 +140,30 @@ export default function Page() {
               </ul>
             </div>
 
-            {/* Map placeholder / image slot */}
-            <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-gray-200/70 bg-white/60 shadow-inner">
-              <div className="grid h-full w-full place-items-center text-center p-6">
-                <p className="text-gray-700">
-                  <span className="font-medium">Map Embed Placeholder</span>
-                  <br />
-                  Drop your map iframe or an image here.
+            {/* Map embed */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-gray-200/70 bg-white/60 shadow-inner">
+              <iframe
+                title="Map to 7015 W. Calavar Rd, Peoria, AZ 85381"
+                aria-label="Map showing the wedding location in Peoria, Arizona"
+                className="absolute inset-0 z-10 h-full w-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                // Simple, keyless Google Maps embed
+                src={`https://www.google.com/maps?q=${encodeURIComponent(
+                  "7015 W. Calavar Rd, Peoria, AZ 85381"
+                )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              />
+              {/* Fallback link (if iframes are blocked) */}
+              <div className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-center p-4 text-center sm:flex">
+                <p className="rounded-lg bg-white/80 p-2 text-sm text-gray-700 shadow">
+                  If the map doesn’t load,{" "}
+                  <a
+                    href="https://maps.google.com/?q=7015%20W.%20Calavar%20Rd,%20Peoria,%20AZ%2085381"
+                    className="pointer-events-auto text-wedding-plum underline underline-offset-4 hover:text-pink-700"
+                  >
+                    open it in Google Maps
+                  </a>
+                  .
                 </p>
               </div>
             </div>
