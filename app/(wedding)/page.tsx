@@ -206,16 +206,10 @@ export default function Page() {
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <a
-                href="#" // Replace with your RSVP form link
+                href="/rsvp" // Replace with your RSVP form link
                 className="inline-block rounded-lg bg-wedding-plum px-6 py-3 font-medium text-white transition hover:bg-wedding-plum"
               >
                 Respond Online
-              </a>
-              <a
-                href="mailto:?subject=Wedding%20RSVP%20—%20Taylor%20%26%20Dylan"
-                className="inline-block rounded-lg border border-wedding-plum/60 bg-white/70 px-6 py-3 font-medium text-wedding-plum transition hover:bg-white"
-              >
-                Email Your RSVP
               </a>
             </div>
             <p className="mt-4 text-sm text-gray-600">Gifts are not required. If you'd like, you can visit our <a href="/registry" className="text-wedding-plum underline underline-offset-4 hover:text-pink-700">registry</a>.</p>
