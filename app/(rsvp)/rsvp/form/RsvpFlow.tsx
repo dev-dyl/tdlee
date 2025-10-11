@@ -19,6 +19,9 @@ import { cn } from "@/lib/utils";
 
 import { Higuen } from '@/app/ui/fonts';
 
+import Link from "next/link";
+import { CheckCircle2, Image, MapPin, Gift, Home } from "lucide-react";
+
 // ------- Types
 type Guest = {
   id: string;
@@ -59,6 +62,37 @@ const submitSchema = z.object({
 });
 
 type SubmitValues = z.infer<typeof submitSchema>;
+
+function SuccessPanel({ name }: { name?: string }) {
+  return (
+    <div className="text-center">
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
+        <CheckCircle2 className="h-7 w-7 text-green-600" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900">
+        Thanks{name ? `, ${name}` : ""}! Your RSVP has been recorded.
+      </h3>
+      <p className="mt-2 text-sm text-gray-600">
+        While you’re here, feel free to explore more details and photos.
+      </p>
+
+      <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Button asChild variant="outline" className="w-full bg-wedding-pink">
+          <Link href="/gallery"><Image className="mr-2 h-4 w-4" /> View the Gallery</Link>
+        </Button>
+        <Button asChild variant="outline" className="w-full bg-wedding-green">
+          <Link href="/info"><MapPin className="mr-2 h-4 w-4" /> FAQ & Details</Link>
+        </Button>
+        <Button asChild variant="outline" className="w-full">
+          <Link href="/registry"><Gift className="mr-2 h-4 w-4" /> Registry</Link>
+        </Button>
+        <Button asChild variant="outline" className="w-full">
+          <Link href="/"><Home className="mr-2 h-4 w-4" /> Home</Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export default function RsvpFlow() {
   const [step, setStep] = React.useState<0 | 1 | 2>(0);
@@ -435,61 +469,73 @@ export default function RsvpFlow() {
       {step === 2 && actor && (
         <Card className="mx-auto mt-4 w-full max-w-xl bg-white/80 backdrop-blur">
           <CardHeader>
-            <CardTitle className="text-center">Leave a Message (optional)</CardTitle>
+            <CardTitle className="text-center">
+              {success ? "You're all set!" : "Leave a Message (optional)"}
+            </CardTitle>
           </CardHeader>
+
           <CardContent className="space-y-4">
-            <div className="grid gap-2">
-              <Label htmlFor="sender">From</Label>
-              <Input
-                id="sender"
-                placeholder="Your name"
-                value={form.watch("sender") ?? ""}
-                onChange={(e) => form.setValue("sender", e.target.value)}
-                disabled={form.watch("anonymous") === true}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="message">Message</Label>
-              <Textarea
-                id="message"
-                placeholder="Say hello to the couple (optional)"
-                value={form.watch("message") ?? ""}
-                onChange={(e) => form.setValue("message", e.target.value)}
-              />
-            </div>
+            {!success ? (
+              <>
+                <div className="grid gap-2">
+                  <Label htmlFor="sender">From</Label>
+                  <Input
+                    id="sender"
+                    placeholder="Your name"
+                    value={form.watch("sender") ?? ""}
+                    onChange={(e) => form.setValue("sender", e.target.value)}
+                    disabled={form.watch("anonymous") === true}
+                  />
+                </div>
 
-            <div className="flex flex-wrap items-center gap-6">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="publish"
-                  checked={form.watch("publishMessage") ?? true}
-                  onCheckedChange={(v) => form.setValue("publishMessage", !!v)}
-                />
-                <Label htmlFor="publish">Publish this to our website</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="anon"
-                  checked={form.watch("anonymous") ?? false}
-                  onCheckedChange={(v) => form.setValue("anonymous", !!v)}
-                />
-                <Label htmlFor="anon">Make my name anonymous</Label>
-              </div>
-            </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Say hello to the couple (optional)"
+                    value={form.watch("message") ?? ""}
+                    onChange={(e) => form.setValue("message", e.target.value)}
+                  />
+                </div>
 
-            {errorText && <p className="text-sm text-red-600">{errorText}</p>}
-            {success && <p className="text-sm text-green-700">Thanks! Your RSVP has been recorded.</p>}
+                <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="publish"
+                      checked={form.watch("publishMessage") ?? true}
+                      onCheckedChange={(v) => form.setValue("publishMessage", !!v)}
+                    />
+                    <Label htmlFor="publish">Publish this to our website</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="anon"
+                      checked={form.watch("anonymous") ?? false}
+                      onCheckedChange={(v) => form.setValue("anonymous", !!v)}
+                    />
+                    <Label htmlFor="anon">Make my name anonymous</Label>
+                  </div>
+                </div>
+
+                {errorText && <p className="text-sm text-red-600">{errorText}</p>}
+              </>
+            ) : (
+              <SuccessPanel name={`${actor.firstName}`} />
+            )}
           </CardContent>
+
           <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-            <Button
-              onClick={() => onSubmitAll()}
-              disabled={
-                loading
-              }
-            >
-              {loading ? "Submitting..." : "Submit RSVP"}
-            </Button>
+            {!success ? (
+              <>
+                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                <Button onClick={() => onSubmitAll()} disabled={loading}>
+                  {loading ? "Submitting..." : "Submit RSVP"}
+                </Button>
+              </>
+            ) : (
+              <>
+              </>
+            )}
           </CardFooter>
         </Card>
       )}
